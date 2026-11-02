@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Tablero : MonoBehaviour
 {
-    [SerializeField] private Transform[] casillas;
+    [SerializeField] private Casilla[] casillas;
 
-    public Transform[] GetTablero()
+    public Casilla[] GetTablero()
     {
         return casillas;
     }
