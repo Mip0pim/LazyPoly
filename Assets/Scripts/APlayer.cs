@@ -12,18 +12,92 @@ public class APlayer : MonoBehaviour, IPlayer
     public int numeroDado;
     private Casilla[] tablero;
     private int miCasilla = 0;
+    [Header("XP stuff")]
+    // valores para empezar con 500 de xp
+    public int xp = 500;
+    public int level = 1;
+    public int xpToLevelUp = 100;
 
     private void Awake()
     {
         tablero = GameObject.FindWithTag("Tablero").GetComponent<Tablero>().GetTablero();
-        if (tablero != null) transform.position = tablero[miCasilla].GetTransform(). position;//posicion inicial
+        if (tablero != null) transform.position = tablero[miCasilla].transform. position;//posicion inicial
         tablero[0].AddJugador(gameObject);
+        CheckLevel();
+    }
+    private void CheckLevel()
+    {
+        // bajada de nivel
+        while (xp < 0)
+        {
+            if (level <= 1)
+            {
+                // no se puede bajar más, se descarta la xp negativa
+                Debug.Log("Jugador bajo del nivel 1, deberia perder partida");
+                level = 1;
+                xp = 0;
+                xpToLevelUp = 100;//xp del nivel 1
+                return;
+            }
+
+            level--;
+            xpToLevelUp = Mathf.Max(100, xpToLevelUp / 2);//100 es la xp del nivel 1
+            xp += xpToLevelUp; // xp es negativo, así que sumar
+        }
+
+        // subida de nivel
+        while (xp >= xpToLevelUp)
+        {
+            level++;
+            xp -= xpToLevelUp;
+            xpToLevelUp *= 2; // cada vez cuesta más subir de nivel
+        }
+    }
+
+    public IEnumerator SumarXP(int amount, float duration = 1f)
+    {
+        Debug.Log("Se sumará " + amount + " xp");
+
+        int applied = 0;//xp sumada
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            int target = Mathf.RoundToInt(amount * t); // cuánto debería llevar sumado ya
+            int step = target - applied;
+            if (step != 0)
+            {
+                xp += step;
+                applied = target;
+                CheckLevel();
+            }
+            yield return null; // esperar al siguiente frame
+        }
+        //suma el resto
+        if (applied != amount)
+        {
+            xp += amount - applied;
+            CheckLevel();
+        }
+        //pausa final
+        yield return new WaitForSeconds(1f);
     }
 
     public IEnumerator AplicarEfectosDeCasilla()
     {
         //quito el no implemntado para que no de error
-        yield return null;
+        if (tablero[miCasilla].tipo == TipoCasilla.ComparOvender)
+        {
+            yield return StartCoroutine(SumarXP(-tablero[miCasilla].coste));// compra obligada por ahora
+        }
+        else
+        {
+            ///mas tipos de casillas
+        }
+        
     }
 
     public void IrCarcel()
@@ -38,7 +112,7 @@ public class APlayer : MonoBehaviour, IPlayer
         {
             miCasilla++;
             miCasilla%=tablero.Length;
-            transform.position = tablero[miCasilla].GetTransform().position;
+            transform.position = tablero[miCasilla].transform.position;
             yield return new WaitForSeconds(1f/n);//1 segundo en mover todas las n posiciones
         }
         tablero[miCasilla].AddJugador(gameObject);
