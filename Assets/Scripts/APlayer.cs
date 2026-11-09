@@ -17,6 +17,11 @@ public class APlayer : MonoBehaviour, IPlayer
     public int xp = 500;
     public int level = 1;
     public int xpToLevelUp = 100;
+    public int bote = 0; 
+
+    //casillas especiales
+    public bool estaEnCarcel = false;
+    public GameObject cartaSuerte;
 
     private void Awake()
     {
@@ -88,35 +93,67 @@ public class APlayer : MonoBehaviour, IPlayer
 
     public IEnumerator AplicarEfectosDeCasilla()
     {
-        //quito el no implemntado para que no de error
         if (tablero[miCasilla].tipo == TipoCasilla.ComparOvender)
         {
             yield return StartCoroutine(SumarXP(-tablero[miCasilla].coste));// compra obligada por ahora
         }
-        else
+        else if (tablero[miCasilla].tipo == TipoCasilla.Inicio)
         {
-            ///mas tipos de casillas
+            Debug.Log(playerName + " ha pasado por la casilla de inicio y ha ganado 100 de XP");
+            yield return StartCoroutine(SumarXP(100));// le da 100 de xp por pasar por inicio
         }
-        
+        else if (tablero[miCasilla].tipo == TipoCasilla.CartaSuerte)
+        {
+            RobarCartaSuerte();
+        }
+        else if (tablero[miCasilla].tipo == TipoCasilla.VeAcarcel)
+        {
+            IrCarcel();
+        }
+        else if (tablero[miCasilla].tipo == TipoCasilla.Carcel)
+        {
+            // no hace nada, solo esta de paso
+            Debug.Log(playerName + " visita la cárcel");
+        }
+        else if (tablero[miCasilla].tipo == TipoCasilla.Bote)
+        {
+            GanarBote(); 
+        }
+
+    }
+
+    public void GanarBote()
+    {
+        SumarXP(bote);
+        bote = 0; 
+        Debug.Log(playerName + " ha ganado el bote y ahora tiene " + xp + " de XP");
     }
 
     public void IrCarcel()
     {
-        throw new System.NotImplementedException();
+        tablero[miCasilla].RemoveJugador(gameObject);
+        miCasilla = System.Array.FindIndex(tablero, c => c.tipo == TipoCasilla.Carcel);//busca la casilla de la carcel
+        tablero[miCasilla].AddJugador(gameObject);
+
+        estaEnCarcel = true;
+        Debug.Log(playerName + " ha ido a la cárcel");
     }
 
     public IEnumerator Mover(int n)//movimiento de las casillas
     {
-        tablero[miCasilla].RemoveJugador(gameObject); 
-        for (int i = 0;i<n;i++)
+        if (!estaEnCarcel)
         {
-            miCasilla++;
-            miCasilla%=tablero.Length;
-            transform.position = tablero[miCasilla].transform.position;
-            yield return new WaitForSeconds(1f/n);//1 segundo en mover todas las n posiciones
+            tablero[miCasilla].RemoveJugador(gameObject);
+            for (int i = 0; i < n; i++)
+            {
+                miCasilla++;
+                miCasilla %= tablero.Length;
+                transform.position = tablero[miCasilla].transform.position;
+                yield return new WaitForSeconds(1f / n);//1 segundo en mover todas las n posiciones
+            }
+            tablero[miCasilla].AddJugador(gameObject);
+            yield return StartCoroutine(AplicarEfectosDeCasilla());
         }
-        tablero[miCasilla].AddJugador(gameObject);
-        yield return StartCoroutine(AplicarEfectosDeCasilla());
     }   
 
     public void OnFinishTurn()
@@ -133,12 +170,21 @@ public class APlayer : MonoBehaviour, IPlayer
 
     public void RobarCartaSuerte()
     {
-        throw new System.NotImplementedException();
+        StartCoroutine(MostrarCartaTemporalmente());
+        Debug.Log(playerName + " ha robado una carta de suerte");
+    }
+
+    private IEnumerator MostrarCartaTemporalmente()
+    {
+        cartaSuerte.SetActive(true);     
+        yield return new WaitForSeconds(2f);// espera 2s para que vea la carta
+        cartaSuerte.SetActive(false);
     }
 
     public void SalirCarcel()
     {
-        throw new System.NotImplementedException();
+        estaEnCarcel = false;
+        Debug.Log(playerName + " ha salido de la cárcel");
     }
 
     public IEnumerator TirarDado()
@@ -147,5 +193,9 @@ public class APlayer : MonoBehaviour, IPlayer
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));// espera a que le pulse
         yield return new WaitForSeconds(0.2f);// tiempo de animacion
         numeroDado = miDado.LanzarDadoNormal();//lanza el dado
+        if (numeroDado == 6 && estaEnCarcel)
+        {
+            SalirCarcel();
+        }
     }
 }
