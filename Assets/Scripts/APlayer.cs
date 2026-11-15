@@ -8,7 +8,7 @@ public class APlayer : MonoBehaviour, IPlayer
     [Header("Player Dice")]
     public Dado miDado;
     private bool miturno = false;
-    private const float prevScale = 6.0f;// esta harcodeado, habra que cambiarlo
+    private const float prevScale = 0.08f;// esta harcodeado, habra que cambiarlo
     public int numeroDado;
     private Casilla[] tablero;
     private int miCasilla = 0;
@@ -165,6 +165,7 @@ public class APlayer : MonoBehaviour, IPlayer
     public void OnStartTurn()
     {
         miturno = true;
+        miDado.Idle();
         transform.localScale *= 1.3f;// 30% mas grande
     }
 
@@ -191,8 +192,8 @@ public class APlayer : MonoBehaviour, IPlayer
     {
         if (!miturno) numeroDado = 0;// por si a caso
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));// espera a que le pulse
-        yield return new WaitForSeconds(0.2f);// tiempo de animacion
-        numeroDado = miDado.LanzarDadoNormal();//lanza el dado
+        yield return StartCoroutine(miDado.LanzarDadoNormal());//lanza el dado
+        numeroDado = miDado.numero;
         if (numeroDado == 6 && estaEnCarcel)
         {
             SalirCarcel();

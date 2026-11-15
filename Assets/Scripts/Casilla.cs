@@ -14,7 +14,7 @@ public enum TipoCasilla
 public class Casilla : MonoBehaviour
 {
     private List<GameObject> ocupacion = new List<GameObject>(); // contiene el nombre de los jugadores que hay en esa casilla
-    private const float prevScale = 6.0f;// esta harcodeado, habra que cambiarlo
+    private const float prevScale = 0.08f;// esta harcodeado, habra que cambiarlo
     public TipoCasilla tipo = TipoCasilla.ComparOvender;//por defecto
     public int coste;//solo si es para comprar
     public int valorVenta;
