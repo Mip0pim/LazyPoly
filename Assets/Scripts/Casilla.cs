@@ -15,9 +15,13 @@ public class Casilla : MonoBehaviour
 {
     private List<GameObject> ocupacion = new List<GameObject>(); // contiene el nombre de los jugadores que hay en esa casilla
     private const float prevScale = 0.08f;// esta harcodeado, habra que cambiarlo
+    public string nombreVideojuego = "Default";
     public TipoCasilla tipo = TipoCasilla.ComparOvender;//por defecto
     public int coste;//solo si es para comprar
     public int valorVenta;
+    public int jugadorQuePertenece = -1;
+    public int nivelParaCompar = 0;
+    public Color color = Color.white;
 
     public List<GameObject> GetOcupacion()
     {

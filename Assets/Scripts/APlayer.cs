@@ -5,6 +5,7 @@ public class APlayer : MonoBehaviour, IPlayer
 {
     [Header("Player Name")]
     public string playerName = "Default Player";
+    public int playerId = 0;
     [Header("Player Dice")]
     public Dado miDado;
     private bool miturno = false;
@@ -95,12 +96,37 @@ public class APlayer : MonoBehaviour, IPlayer
     {
         if (tablero[miCasilla].tipo == TipoCasilla.ComparOvender)
         {
-            yield return StartCoroutine(SumarXP(-tablero[miCasilla].coste));// compra obligada por ahora
+            Casilla casilla = tablero[miCasilla];
+            if (casilla.nivelParaCompar <= level)
+            {
+                if (casilla.jugadorQuePertenece == -1)
+                {
+                    tablero[miCasilla].jugadorQuePertenece = playerId;
+                    CompraVentaUI cvUI = GameObject.FindWithTag("CompraVentaUI").GetComponent<CompraVentaUI>();
+                    yield return StartCoroutine(cvUI.ActivarCompra(casilla));
+                    if (cvUI.comprarOCancelar == 1)
+                    {
+                        yield return StartCoroutine(SumarXP(-casilla.coste));// compra 
+                    }
+                    
+                }
+                else
+                {
+                    ManagerTurnos mt = GameObject.FindWithTag("ManagerTurnos").GetComponent<ManagerTurnos>();
+                    mt.players[casilla.jugadorQuePertenece].xp += casilla.valorVenta;
+                    yield return StartCoroutine(SumarXP(-casilla.valorVenta));
+                }
+            }
+            else
+            {
+                Debug.Log("Jugador no tiene suficiente nivel para comprar");
+            }
+                
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.Inicio)
         {
-            Debug.Log(playerName + " ha pasado por la casilla de inicio y ha ganado 100 de XP");
-            yield return StartCoroutine(SumarXP(100));// le da 100 de xp por pasar por inicio
+            Debug.Log(playerName + " ha pasado por la casilla de inicio y ha ganado 1000 de XP");
+            yield return StartCoroutine(SumarXP(1000));// le da 100 de xp por pasar por inicio
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.CartaSuerte)
         {
