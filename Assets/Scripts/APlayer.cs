@@ -19,7 +19,7 @@ public class APlayer : MonoBehaviour, IPlayer
     public int level = 1;
     public int xpToLevelUp = 100;
     public int bote = 0; 
-
+    private float mult = 1f;
     //casillas especiales
     public bool estaEnCarcel = false;
     public GameObject cartaSuerte;
@@ -62,11 +62,11 @@ public class APlayer : MonoBehaviour, IPlayer
 
     public IEnumerator SumarXP(int amount, float duration = 1f)
     {
-        Debug.Log("Se sumará " + amount + " xp");
+        Debug.Log("Se sumará " + amount*mult + " xp");
 
         int applied = 0;//xp sumada
         float elapsed = 0f;
-
+        amount = (int)(amount * mult);
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -130,11 +130,11 @@ public class APlayer : MonoBehaviour, IPlayer
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.CartaSuerte)
         {
-            RobarCartaSuerte();
+            yield return StartCoroutine(RobarCartaSuerte());
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.VeAcarcel)
         {
-            IrCarcel();
+            yield return StartCoroutine(IrCarcel());
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.Carcel)
         {
@@ -150,20 +150,29 @@ public class APlayer : MonoBehaviour, IPlayer
 
     public void GanarBote()
     {
-        SumarXP(bote);
+        StartCoroutine(SumarXP(bote));
         bote = 0; 
         Debug.Log(playerName + " ha ganado el bote y ahora tiene " + xp + " de XP");
     }
 
-    public void IrCarcel()
+    public IEnumerator IrCarcel()
     {
-        tablero[miCasilla].RemoveJugador(gameObject);
-        miCasilla = System.Array.FindIndex(tablero, c => c.tipo == TipoCasilla.Carcel);//busca la casilla de la carcel
-        tablero[miCasilla].AddJugador(gameObject);
+        int casillaCarcel = System.Array.FindIndex(tablero, c => c.tipo == TipoCasilla.Carcel);
+
+        if (casillaCarcel == -1)
+        {
+            Debug.LogError("No se encontró ninguna casilla de Cárcel en el tablero.");
+            yield break;
+        }
+
+        // calcula los pasos siempre hacia adelante, dando la vuelta al tablero si es necesario
+        int pasos = (casillaCarcel - miCasilla + tablero.Length) % tablero.Length;
+        yield return StartCoroutine(Mover(pasos));
 
         estaEnCarcel = true;
         Debug.Log(playerName + " ha ido a la cárcel");
     }
+
 
     public IEnumerator Mover(int n)//movimiento de las casillas
     {
@@ -184,6 +193,7 @@ public class APlayer : MonoBehaviour, IPlayer
 
     public void OnFinishTurn()
     {
+        mult = 1f;//reinicia mult
         miturno = false;
         //transform.localScale = Vector3.one * prevScale;// recupera tamaño
     }
@@ -195,10 +205,33 @@ public class APlayer : MonoBehaviour, IPlayer
         transform.localScale *= 1.3f;// 30% mas grande
     }
 
-    public void RobarCartaSuerte()
+    public IEnumerator RobarCartaSuerte()
     {
+        Carta cartaSuerte = GameObject.FindWithTag("CartaSuerteBD")?.GetComponent<CartasSuerte>().GetNextCard();
+        if (cartaSuerte == null)
+        {
+            Debug.Log("Carta de la suerte fue nulo");
+            yield break;//como un return en corrutinas
+        }
         StartCoroutine(MostrarCartaTemporalmente());
         Debug.Log(playerName + " ha robado una carta de suerte");
+        // hacer una accion dependiendo de la carta
+        if (cartaSuerte.tipoDeCarta == TipoCartaSuerte.VeCarcel)
+        {
+            Debug.Log("Carta suerte: ve carcel");
+            yield return StartCoroutine(IrCarcel());
+        }
+        if (cartaSuerte.tipoDeCarta == TipoCartaSuerte.CambiaMult)
+        {
+            Debug.Log("Carta suerte: mult: " + cartaSuerte.valor);
+            mult = cartaSuerte.valor;
+        }
+        if (cartaSuerte.tipoDeCarta == TipoCartaSuerte.GanaOPierdeXP)
+        {
+            Debug.Log("Carta suerte: gana xp: " + cartaSuerte.valor);
+            yield return StartCoroutine(SumarXP(cartaSuerte.valor));
+        }
+        yield return null;
     }
 
     private IEnumerator MostrarCartaTemporalmente()
