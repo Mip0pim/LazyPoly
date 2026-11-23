@@ -11,6 +11,11 @@ public class CompraVentaUI : MonoBehaviour
     public TextMeshProUGUI venta;
     public Image color;
     public int comprarOCancelar = -1;
+    [Header("Sonido de compra")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip sonidoCompra;
+    [SerializeField] private AudioClip sonidoCancelar;
+
 
     public IEnumerator ActivarCompra(Casilla casilla)
     {
@@ -28,5 +33,16 @@ public class CompraVentaUI : MonoBehaviour
     public void ComprarOCancelar(int a)
     {
         comprarOCancelar = a;
+
+        if (a == 1)
+        {
+           
+            audioSource.PlayOneShot(sonidoCompra);
+        }
+        else if (a == 2)
+        {
+          
+            audioSource.PlayOneShot(sonidoCancelar);
+        }
     }
 }

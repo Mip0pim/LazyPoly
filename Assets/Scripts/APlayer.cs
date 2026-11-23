@@ -1,5 +1,4 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class APlayer : MonoBehaviour, IPlayer
@@ -19,22 +18,20 @@ public class APlayer : MonoBehaviour, IPlayer
     public int xp = 500;
     public int level = 1;
     public int xpToLevelUp = 100;
-    public int bote = 0; 
+    public int bote = 0;
     private float mult = 1f;
     //casillas especiales
     public bool estaEnCarcel = false;
     public GameObject cartaSuerte;
 
-    [Header("Interfaz")]
-    public TextMeshProUGUI nombreUI;
-    public TextMeshProUGUI nivelUI;
-    public TextMeshProUGUI xpUI; 
-
+    [Header("Sonido de movimiento")]
+    [SerializeField] private AudioSource sonidoMovimiento;
+   
 
     private void Awake()
     {
         tablero = GameObject.FindWithTag("Tablero").GetComponent<Tablero>().GetTablero();
-        if (tablero != null) transform.position = tablero[miCasilla].transform. position;//posicion inicial
+        if (tablero != null) transform.position = tablero[miCasilla].transform.position;//posicion inicial
         tablero[0].AddJugador(gameObject);
         CheckLevel();
     }
@@ -69,7 +66,7 @@ public class APlayer : MonoBehaviour, IPlayer
 
     public IEnumerator SumarXP(int amount, float duration = 1f)
     {
-        Debug.Log("Se sumará " + amount*mult + " xp a " + playerName);
+        Debug.Log("Se sumará " + amount * mult + " xp");
 
         int applied = 0;//xp sumada
         float elapsed = 0f;
@@ -115,7 +112,7 @@ public class APlayer : MonoBehaviour, IPlayer
                     {
                         yield return StartCoroutine(SumarXP(-casilla.coste));// compra 
                     }
-                    
+
                 }
                 else
                 {
@@ -128,7 +125,7 @@ public class APlayer : MonoBehaviour, IPlayer
             {
                 Debug.Log("Jugador no tiene suficiente nivel para comprar");
             }
-                
+
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.Inicio)
         {
@@ -150,7 +147,7 @@ public class APlayer : MonoBehaviour, IPlayer
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.Bote)
         {
-            GanarBote(); 
+            GanarBote();
         }
 
     }
@@ -158,7 +155,7 @@ public class APlayer : MonoBehaviour, IPlayer
     public void GanarBote()
     {
         StartCoroutine(SumarXP(bote));
-        bote = 0; 
+        bote = 0;
         Debug.Log(playerName + " ha ganado el bote y ahora tiene " + xp + " de XP");
     }
 
@@ -181,22 +178,40 @@ public class APlayer : MonoBehaviour, IPlayer
     }
 
 
-    public IEnumerator Mover(int n)//movimiento de las casillas
+
+
+
+    public IEnumerator Mover(int n)
     {
         if (!estaEnCarcel)
         {
             tablero[miCasilla].RemoveJugador(gameObject);
+
             for (int i = 0; i < n; i++)
             {
                 miCasilla++;
                 miCasilla %= tablero.Length;
+
+                // Reproducir sonido en cada casilla
+                sonidoMovimiento.Stop();
+                sonidoMovimiento.time = 0f;
+                sonidoMovimiento.Play();
+
                 transform.position = tablero[miCasilla].transform.position;
-                yield return new WaitForSeconds(1f / n);//1 segundo en mover todas las n posiciones
+
+                yield return new WaitForSeconds(1f / n);
             }
+
+            sonidoMovimiento.Stop();
+
             tablero[miCasilla].AddJugador(gameObject);
+
             yield return StartCoroutine(AplicarEfectosDeCasilla());
         }
-    }   
+    }
+
+
+
 
     public void OnFinishTurn()
     {
@@ -243,7 +258,7 @@ public class APlayer : MonoBehaviour, IPlayer
 
     private IEnumerator MostrarCartaTemporalmente()
     {
-        cartaSuerte.SetActive(true);     
+        cartaSuerte.SetActive(true);
         yield return new WaitForSeconds(2f);// espera 2s para que vea la carta
         cartaSuerte.SetActive(false);
     }
@@ -254,22 +269,29 @@ public class APlayer : MonoBehaviour, IPlayer
         Debug.Log(playerName + " ha salido de la cárcel");
     }
 
+
     public IEnumerator TirarDado()
     {
-        if (!miturno) numeroDado = 0;// por si a caso
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));// espera a que le pulse
-        yield return StartCoroutine(miDado.LanzarDadoNormal());//lanza el dado
+        numeroDado = 0;
+
+        // El dado comienza a revolverse automáticamente
+        miDado.IniciarRevolver();
+
+        // Esperar hasta que el jugador pulse ESPACIO
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+
+        // Detener el revoloteo y reproducir el lanzamiento
+        miDado.DetenerRevolver();
+        miDado.SonidoAlLanzar();
+
+        // Obtener el resultado del dado
+        yield return StartCoroutine(miDado.LanzarDadoNormal());
+
         numeroDado = miDado.numero;
+
         if (numeroDado == 6 && estaEnCarcel)
         {
             SalirCarcel();
         }
-    }
-
-    private void OnGUI()
-    {
-        if (nombreUI != null) nombreUI.text = playerName;
-        if (nivelUI != null) nivelUI.text = "Nivel: " + level;
-        if (xpUI != null) xpUI.text = "XP: " + xp + " / " + xpToLevelUp;
     }
 }

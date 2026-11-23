@@ -52,7 +52,7 @@ public class Casilla : MonoBehaviour
 
             case 1:
                 ocupacion[0].transform.localPosition = transform.position; // coloca al jugador en el centro de la casilla
-                ocupacion[0].transform.localScale = Vector3.one * prevScale; 
+                ocupacion[0].transform.localScale = Vector3.one* 0.8f * prevScale; 
                 break;
 
             case 2:
