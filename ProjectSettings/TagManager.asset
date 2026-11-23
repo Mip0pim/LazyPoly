@@ -8,6 +8,7 @@ TagManager:
   - ManagerTurnos
   - CompraVentaUI
   - CartaSuerteBD
+  - Musica
   layers:
   - Default
   - TransparentFX
