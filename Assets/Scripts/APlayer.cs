@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class APlayer : MonoBehaviour, IPlayer
@@ -23,6 +24,12 @@ public class APlayer : MonoBehaviour, IPlayer
     //casillas especiales
     public bool estaEnCarcel = false;
     public GameObject cartaSuerte;
+
+    [Header("Interfaz")]
+    public TextMeshProUGUI nombreUI;
+    public TextMeshProUGUI nivelUI;
+    public TextMeshProUGUI xpUI; 
+
 
     private void Awake()
     {
@@ -62,7 +69,7 @@ public class APlayer : MonoBehaviour, IPlayer
 
     public IEnumerator SumarXP(int amount, float duration = 1f)
     {
-        Debug.Log("Se sumará " + amount*mult + " xp");
+        Debug.Log("Se sumará " + amount*mult + " xp a " + playerName);
 
         int applied = 0;//xp sumada
         float elapsed = 0f;
@@ -257,5 +264,12 @@ public class APlayer : MonoBehaviour, IPlayer
         {
             SalirCarcel();
         }
+    }
+
+    private void OnGUI()
+    {
+        if (nombreUI != null) nombreUI.text = playerName;
+        if (nivelUI != null) nivelUI.text = "Nivel: " + level;
+        if (xpUI != null) xpUI.text = "XP: " + xp + " / " + xpToLevelUp;
     }
 }

@@ -18,40 +18,47 @@ public class ManagerTurnos : MonoBehaviour
     private APlayer player;
 
     private Coroutine turnoCoroutine;
+    public bool parado; 
 
     private void Awake()
     {
         turno = 0;// por defecto creo que es 0 pero para estar seguros
         player = players[0];
+        parado = false;
     }
 
 
     private void Update()
     {
-        if (players.Length < 1) return;// no hay players
-        if(turnoCoroutine == null) turnoCoroutine = StartCoroutine(TurnoJugador(turno));
-        
+        if (!parado)
+        {
+            if (players.Length < 1) return;// no hay players
+            if (turnoCoroutine == null) turnoCoroutine = StartCoroutine(TurnoJugador(turno));
+        }
         
     }
 
 
     IEnumerator TurnoJugador(int id)
     {
-        //setup
-        player = players[id];
-        UpdateUIPlayer();
-        
-        player.OnStartTurn();//comienza el turno
-        yield return StartCoroutine(player.TirarDado());//tira el dado
-        int dado = player.numeroDado;
-        yield return new WaitForSeconds(0.2f);//espera un poco
-        yield return StartCoroutine(player.Mover(dado));//muevete
-        player.OnFinishTurn();//ternima el turno
 
-        // siguiente jugador
-        turno++;
-        turno%=players.Length;
-        turnoCoroutine = null;
+            //setup
+            player = players[id];
+            UpdateUIPlayer();
+
+            player.OnStartTurn();//comienza el turno
+
+            if (!parado) yield return StartCoroutine(player.TirarDado());//tira el dado
+            int dado = player.numeroDado;
+            yield return new WaitForSeconds(0.2f);//espera un poco
+            yield return StartCoroutine(player.Mover(dado));//muevete
+            player.OnFinishTurn();//ternima el turno
+
+            // siguiente jugador
+            turno++;
+            turno %= players.Length;
+            turnoCoroutine = null;
+
     }
 
     private void UpdateUIPlayer()
