@@ -5,7 +5,9 @@ public enum TipoCartaSuerte
 {
     GanaOPierdeXP, 
     CambiaMult,
-    VeCarcel
+    VeCarcel, 
+    VeInicio, 
+    ParImpar
 }
 [System.Serializable]
 public class Carta

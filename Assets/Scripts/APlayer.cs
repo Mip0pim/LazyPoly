@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class APlayer : MonoBehaviour, IPlayer
@@ -23,10 +24,15 @@ public class APlayer : MonoBehaviour, IPlayer
     //casillas especiales
     public bool estaEnCarcel = false;
     public GameObject cartaSuerte;
+    public TextMeshProUGUI TextoCartaSuerte;
 
     [Header("Sonido de movimiento")]
     [SerializeField] private AudioSource sonidoMovimiento;
-   
+
+    [Header("Interfaz")]
+    public TextMeshProUGUI textExperiencia;
+    public TextMeshProUGUI textNivel;
+
 
     private void Awake()
     {
@@ -130,7 +136,7 @@ public class APlayer : MonoBehaviour, IPlayer
         else if (tablero[miCasilla].tipo == TipoCasilla.Inicio)
         {
             Debug.Log(playerName + " ha pasado por la casilla de inicio y ha ganado 1000 de XP");
-            yield return StartCoroutine(SumarXP(1000));// le da 100 de xp por pasar por inicio
+            //yield return StartCoroutine(SumarXP(1000));// le da 100 de xp por pasar por inicio
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.CartaSuerte)
         {
@@ -178,7 +184,20 @@ public class APlayer : MonoBehaviour, IPlayer
     }
 
 
+    private IEnumerator IrInicio()
+    {
+        int casillaCarcel = System.Array.FindIndex(tablero, c => c.tipo == TipoCasilla.Inicio);
 
+        if (casillaCarcel == -1)
+        {
+            Debug.LogError("No se encontró ninguna casilla de inicio en el tablero.");
+            yield break;
+        }
+
+        // calcula los pasos siempre hacia adelante, dando la vuelta al tablero si es necesario
+        int pasos = (casillaCarcel - miCasilla + tablero.Length) % tablero.Length;
+        yield return StartCoroutine(Mover(pasos));
+    }
 
 
     public IEnumerator Mover(int n)
@@ -198,7 +217,7 @@ public class APlayer : MonoBehaviour, IPlayer
                 sonidoMovimiento.Play();
 
                 transform.position = tablero[miCasilla].transform.position;
-
+                if (tablero[miCasilla].tipo == TipoCasilla.Inicio) yield return StartCoroutine(SumarXP(1000));
                 yield return new WaitForSeconds(1f / n);
             }
 
@@ -229,37 +248,56 @@ public class APlayer : MonoBehaviour, IPlayer
 
     public IEnumerator RobarCartaSuerte()
     {
-        Carta cartaSuerte = GameObject.FindWithTag("CartaSuerteBD")?.GetComponent<CartasSuerte>().GetNextCard();
+        Carta cartaSuerte2 = GameObject.FindWithTag("CartaSuerteBD")?.GetComponent<CartasSuerte>().GetNextCard();
         if (cartaSuerte == null)
         {
             Debug.Log("Carta de la suerte fue nulo");
             yield break;//como un return en corrutinas
         }
+        TextoCartaSuerte.text = cartaSuerte2.description;
         StartCoroutine(MostrarCartaTemporalmente());
         Debug.Log(playerName + " ha robado una carta de suerte");
         // hacer una accion dependiendo de la carta
-        if (cartaSuerte.tipoDeCarta == TipoCartaSuerte.VeCarcel)
+        if (cartaSuerte2.tipoDeCarta == TipoCartaSuerte.VeCarcel)
         {
             Debug.Log("Carta suerte: ve carcel");
             yield return StartCoroutine(IrCarcel());
         }
-        if (cartaSuerte.tipoDeCarta == TipoCartaSuerte.CambiaMult)
+        if (cartaSuerte2.tipoDeCarta == TipoCartaSuerte.CambiaMult)
         {
-            Debug.Log("Carta suerte: mult: " + cartaSuerte.valor);
-            mult = cartaSuerte.valor;
+            Debug.Log("Carta suerte: mult: " + cartaSuerte2.valor);
+            mult = cartaSuerte2.valor;
         }
-        if (cartaSuerte.tipoDeCarta == TipoCartaSuerte.GanaOPierdeXP)
+        if (cartaSuerte2.tipoDeCarta == TipoCartaSuerte.GanaOPierdeXP)
         {
-            Debug.Log("Carta suerte: gana xp: " + cartaSuerte.valor);
-            yield return StartCoroutine(SumarXP(cartaSuerte.valor));
+            Debug.Log("Carta suerte: gana xp: " + cartaSuerte2.valor);
+            yield return StartCoroutine(SumarXP(cartaSuerte2.valor));
         }
-        yield return null;
+        if (cartaSuerte2.tipoDeCarta == TipoCartaSuerte.VeInicio)
+        {
+            Debug.Log("Carta suerte: inicio ");
+            yield return StartCoroutine(IrInicio());
+        }
+        if (cartaSuerte2.tipoDeCarta == TipoCartaSuerte.ParImpar)
+        {
+            Debug.Log("Carta suerte: parImpar y el dado fue: " + numeroDado);
+            if (numeroDado % 2 == 0)//pares
+            {
+                yield return StartCoroutine(SumarXP(cartaSuerte2.valor));
+            }
+            else
+            {
+                yield return StartCoroutine(SumarXP(-cartaSuerte2.valor));
+            }
+        }
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+        cartaSuerte.SetActive(false);
     }
 
     private IEnumerator MostrarCartaTemporalmente()
     {
         cartaSuerte.SetActive(true);
-        yield return new WaitForSeconds(2f);// espera 2s para que vea la carta
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         cartaSuerte.SetActive(false);
     }
 
@@ -293,5 +331,13 @@ public class APlayer : MonoBehaviour, IPlayer
         {
             SalirCarcel();
         }
+    }
+
+
+    //interfaz
+    private void OnGUI()
+    {
+        textNivel.text = "Nivel: " + level;
+        textExperiencia.text = "XP: " + xp+" / " + xpToLevelUp;
     }
 }
