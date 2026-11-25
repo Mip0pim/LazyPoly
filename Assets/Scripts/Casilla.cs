@@ -23,6 +23,8 @@ public class Casilla : MonoBehaviour
     public int nivelParaCompar = 0;
     public Color color = Color.white;
 
+    [Header("Sonido")]
+    [SerializeField] private AudioClip sonidoCasilla;
     public List<GameObject> GetOcupacion()
     {
         return ocupacion;
@@ -81,6 +83,13 @@ public class Casilla : MonoBehaviour
                 ocupacion[2].transform.localScale = Vector3.one * 0.4f * prevScale;
                 ocupacion[3].transform.localScale = Vector3.one * 0.4f * prevScale;
                 break;
+        }
+    }
+    public void ReproducirSonido()
+    {
+        if (sonidoCasilla != null && SFXManager.Instance != null)
+        {
+            SFXManager.Instance.ReproducirSonido(sonidoCasilla);
         }
     }
 }

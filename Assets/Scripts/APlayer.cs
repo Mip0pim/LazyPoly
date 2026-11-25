@@ -102,28 +102,34 @@ public class APlayer : MonoBehaviour, IPlayer
         yield return new WaitForSeconds(1f);
     }
 
+
     public IEnumerator AplicarEfectosDeCasilla()
     {
         if (tablero[miCasilla].tipo == TipoCasilla.ComparOvender)
         {
             Casilla casilla = tablero[miCasilla];
+
             if (casilla.nivelParaCompar <= level)
             {
                 if (casilla.jugadorQuePertenece == -1)
                 {
                     tablero[miCasilla].jugadorQuePertenece = playerId;
+
                     CompraVentaUI cvUI = GameObject.FindWithTag("CompraVentaUI").GetComponent<CompraVentaUI>();
+
                     yield return StartCoroutine(cvUI.ActivarCompra(casilla));
+
                     if (cvUI.comprarOCancelar == 1)
                     {
-                        yield return StartCoroutine(SumarXP(-casilla.coste));// compra 
+                        yield return StartCoroutine(SumarXP(-casilla.coste)); // compra
                     }
-
                 }
                 else
                 {
                     ManagerTurnos mt = GameObject.FindWithTag("ManagerTurnos").GetComponent<ManagerTurnos>();
+
                     mt.players[casilla.jugadorQuePertenece].xp += casilla.valorVenta;
+
                     yield return StartCoroutine(SumarXP(-casilla.valorVenta));
                 }
             }
@@ -131,12 +137,11 @@ public class APlayer : MonoBehaviour, IPlayer
             {
                 Debug.Log("Jugador no tiene suficiente nivel para comprar");
             }
-
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.Inicio)
         {
             Debug.Log(playerName + " ha pasado por la casilla de inicio y ha ganado 1000 de XP");
-            //yield return StartCoroutine(SumarXP(1000));// le da 100 de xp por pasar por inicio
+            //yield return StartCoroutine(SumarXP(1000));
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.CartaSuerte)
         {
@@ -144,19 +149,20 @@ public class APlayer : MonoBehaviour, IPlayer
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.VeAcarcel)
         {
+            tablero[miCasilla].ReproducirSonido();
             yield return StartCoroutine(IrCarcel());
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.Carcel)
         {
-            // no hace nada, solo esta de paso
+            // No hace nada, solo está de paso
             Debug.Log(playerName + " visita la cárcel");
         }
         else if (tablero[miCasilla].tipo == TipoCasilla.Bote)
         {
             GanarBote();
         }
-
     }
+
 
     public void GanarBote()
     {

@@ -306,6 +306,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 1, g: 1, b: 1, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &106617187
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +765,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 2
   color: {r: 0.9254902, g: 0.078431375, b: 0.078431375, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &182980632
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,6 +817,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 4
   color: {r: 0.91764706, g: 0.2509804, b: 0.84313726, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &204694136
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,6 +1093,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 3
   color: {r: 0.95303285, g: 0.98490566, b: 0.2062727, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &302714212
 GameObject:
   m_ObjectHideFlags: 0
@@ -1141,6 +1145,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 4
   color: {r: 0.9169811, g: 0.24741183, b: 0.8405705, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &341666796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1864,6 +1869,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 1, g: 1, b: 1, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &455773836
 GameObject:
   m_ObjectHideFlags: 0
@@ -2538,6 +2544,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 1, g: 1, b: 1, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &572471127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3751,6 +3758,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 2
   color: {r: 0.9254902, g: 0.078431375, b: 0.078431375, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &895532028
 GameObject:
   m_ObjectHideFlags: 0
@@ -3802,6 +3810,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 1, g: 1, b: 1, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &941383739
 GameObject:
   m_ObjectHideFlags: 0
@@ -3853,6 +3862,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 4
   color: {r: 0.123552844, g: 0.27159655, b: 0.97735846, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &957284628
 GameObject:
   m_ObjectHideFlags: 0
@@ -4040,6 +4050,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 3
   color: {r: 0.8901961, g: 0.65882355, b: 0.21568628, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &965419649
 GameObject:
   m_ObjectHideFlags: 0
@@ -4620,6 +4631,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 5
   color: {r: 0.6156863, g: 0.20784314, b: 0.8980392, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1175502557
 GameObject:
   m_ObjectHideFlags: 0
@@ -4671,6 +4683,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 4
   color: {r: 0.1254902, g: 0.27450982, b: 0.98039216, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1195693789
 GameObject:
   m_ObjectHideFlags: 0
@@ -4809,6 +4822,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 1, g: 1, b: 1, a: 1}
+  sonidoCasilla: {fileID: 8300000, guid: 028781f08719f6240909832656d91c43, type: 3}
 --- !u!1 &1229824462
 GameObject:
   m_ObjectHideFlags: 0
@@ -4860,6 +4874,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 4
   color: {r: 0.91764706, g: 0.2509804, b: 0.84313726, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1246982585
 GameObject:
   m_ObjectHideFlags: 0
@@ -4911,6 +4926,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 2
   color: {r: 0.9245283, g: 0.075008824, b: 0.075008824, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1256991775
 GameObject:
   m_ObjectHideFlags: 0
@@ -5252,6 +5268,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 3
   color: {r: 0.8901961, g: 0.65882355, b: 0.21568628, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1339438224
 GameObject:
   m_ObjectHideFlags: 0
@@ -5303,6 +5320,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 5
   color: {r: 0.61442095, g: 0.2075542, b: 0.89433956, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1389649599
 GameObject:
   m_ObjectHideFlags: 0
@@ -5354,6 +5372,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 1, g: 1, b: 1, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1406393595
 GameObject:
   m_ObjectHideFlags: 0
@@ -5616,6 +5635,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 4
   color: {r: 0.1254902, g: 0.27450982, b: 0.98039216, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1451404376
 GameObject:
   m_ObjectHideFlags: 0
@@ -5667,6 +5687,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 3
   color: {r: 0.8867924, g: 0.6579465, b: 0.2124955, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1458601040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5854,6 +5875,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 0.32866496, g: 0.8415094, b: 0.3951476, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1474145614
 GameObject:
   m_ObjectHideFlags: 0
@@ -6252,6 +6274,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 3
   color: {r: 0.95686275, g: 0.9882353, b: 0.20784314, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1586436008
 GameObject:
   m_ObjectHideFlags: 0
@@ -6436,6 +6459,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 5
   color: {r: 0.6156863, g: 0.20784314, b: 0.8980392, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1676782899
 GameObject:
   m_ObjectHideFlags: 0
@@ -6487,6 +6511,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 0.27273044, g: 0.64705884, b: 0.8867924, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1681840092
 GameObject:
   m_ObjectHideFlags: 0
@@ -6538,6 +6563,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 0.27450982, g: 0.64705884, b: 0.8901961, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1691448159
 GameObject:
   m_ObjectHideFlags: 0
@@ -6801,6 +6827,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 0.32941177, g: 0.84313726, b: 0.39607844, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1752787593
 GameObject:
   m_ObjectHideFlags: 0
@@ -7395,6 +7422,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 0.32941177, g: 0.84313726, b: 0.39607844, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1863679390
 GameObject:
   m_ObjectHideFlags: 0
@@ -7798,6 +7826,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 0.27450982, g: 0.64705884, b: 0.8901961, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1927135157
 GameObject:
   m_ObjectHideFlags: 0
@@ -8140,6 +8169,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 1, g: 1, b: 1, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &1999299681
 GameObject:
   m_ObjectHideFlags: 0
@@ -8751,6 +8781,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 0
   color: {r: 1, g: 1, b: 1, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &2127702239
 GameObject:
   m_ObjectHideFlags: 0
@@ -8938,6 +8969,7 @@ MonoBehaviour:
   jugadorQuePertenece: -1
   nivelParaCompar: 3
   color: {r: 0.95686275, g: 0.9882353, b: 0.20784314, a: 1}
+  sonidoCasilla: {fileID: 0}
 --- !u!1 &2136243632
 GameObject:
   m_ObjectHideFlags: 0

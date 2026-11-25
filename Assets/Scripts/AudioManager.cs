@@ -15,19 +15,14 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("AudioManager Awake ejecutado");
-
         if (Instance != null && Instance != this)
         {
-            Debug.Log("AudioManager duplicado, destruyendo el nuevo");
             Destroy(gameObject);
             return;
         }
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        Debug.Log("AudioManager persistente creado");
 
         float sfx = PlayerPrefs.GetFloat("VolumenSFX", 1f);
         float music = PlayerPrefs.GetFloat("VolumenMusic", 1f);
@@ -67,9 +62,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        bool aplicado = audioMixer.SetFloat(parametro, db);
-
-        if (!aplicado)
+        if (!audioMixer.SetFloat(parametro, db))
         {
             Debug.LogError("No se ha podido modificar el parámetro: " + parametro);
             return;
@@ -77,7 +70,5 @@ public class AudioManager : MonoBehaviour
 
         PlayerPrefs.SetFloat(clave, volumen);
         PlayerPrefs.Save();
-
-        Debug.Log(parametro + " cambiado a " + volumen + " (" + db + " dB)");
     }
 }
