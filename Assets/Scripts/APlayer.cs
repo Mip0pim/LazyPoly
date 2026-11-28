@@ -113,15 +113,27 @@ public class APlayer : MonoBehaviour, IPlayer
             {
                 if (casilla.jugadorQuePertenece == -1)
                 {
-                    tablero[miCasilla].jugadorQuePertenece = playerId;
-
+                    
                     CompraVentaUI cvUI = GameObject.FindWithTag("CompraVentaUI").GetComponent<CompraVentaUI>();
 
                     yield return StartCoroutine(cvUI.ActivarCompra(casilla));
 
                     if (cvUI.comprarOCancelar == 1)
                     {
+                        tablero[miCasilla].jugadorQuePertenece = playerId;
                         yield return StartCoroutine(SumarXP(-casilla.coste)); // compra
+                    }
+                }
+                else if(casilla.jugadorQuePertenece == playerId)
+                {
+                    MejoraUI meUI = GameObject.FindWithTag("MejoraUI").GetComponent<MejoraUI>();
+
+                    yield return StartCoroutine(meUI.ActivarMejora(casilla));
+
+                    if (meUI.comprarOCancelar == 1)
+                    {
+                        yield return StartCoroutine(SumarXP(-(casilla.valorVenta*2))); // compra
+                        casilla.valorVenta = (int)(casilla.valorVenta * 1.5f);
                     }
                 }
                 else

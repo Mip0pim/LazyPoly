@@ -9,6 +9,7 @@ TagManager:
   - CompraVentaUI
   - CartaSuerteBD
   - Musica
+  - MejoraUI
   layers:
   - Default
   - TransparentFX
